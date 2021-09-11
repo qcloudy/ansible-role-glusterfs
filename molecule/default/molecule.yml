@@ -1,0 +1,31 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: instance
+    image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2004}-ansible:latest"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    networks:
+      - name: ${MOLECULE_DISTRO:-ubuntu2004}-${CI_PROJECT_NAME:-default}
+    privileged: true
+    pre_build_image: true
+    groups:
+      - glusterfs
+provisioner:
+  name: ansible
+  playbooks:
+    converge: ${MOLECULE_PLAYBOOK:-converge.yml}
+  inventory:
+    group_vars:
+      all:
+        glusterfs_version: 8
+scenario:
+  name: default
+verifier:
+  name: testinfra
+  lint:
+    name: flake8

@@ -1,0 +1,41 @@
+---
+- name: debian | Updating APT Cache
+  apt:
+    update_cache: true
+  become: true
+
+- name: debian | Installing Pre-Reqs
+  apt:
+    name:
+      - apt-transport-https
+      - gnupg
+      - software-properties-common
+    state: present
+  become: true
+
+- name: debian | Adding GlusterFS Repo
+  apt_repository:
+    repo: "ppa:gluster/glusterfs-{{ glusterfs_version }}"
+    state: present
+  become: true
+  when: ansible_distribution == "Ubuntu"
+
+- name: debian | Adding GlusterFS Repo Key
+  apt_key:
+    url: "{{ glusterfs_debian_repo_key }}"
+    state: present
+  become: true
+  when: ansible_distribution == "Debian"
+
+- name: debian | Adding GlusterFS Repo
+  apt_repository:
+    repo: "{{ glusterfs_debian_repo }}"
+    state: present
+  become: true
+  when: ansible_distribution == "Debian"
+
+- name: debian | Installing glusterfs-server
+  apt:
+    name: glusterfs-server
+    state: present
+  become: true

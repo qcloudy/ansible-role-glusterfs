@@ -1,0 +1,28 @@
+---
+- name: config | Creating GlusterFS Brick Folders
+  file:
+    path: "{{ item.1 }}"
+    state: directory
+  become: true
+  loop: "{{ lookup('subelements', glusterfs_bricks, 'bricks', wantlist=True) }}"
+  when: (glusterfs_bricks is defined) and (glusterfs_bricks|length > 0)
+
+- name: config | Managing GlusterFS Trusted Storage Pool
+  gluster_peer:
+    nodes: "{{ glusterfs_cluster_nodes }}"
+    state: present
+  delegate_to: "{{ glusterfs_primary }}"
+  become: true
+
+- name: config | Managing GlusterFS Volumes
+  gluster_volume:
+    bricks: "{{ item.1 }}"
+    cluster: "{{ glusterfs_cluster_nodes }}"
+    force: true
+    name: "{{ item.0.name }}"
+    replicas: "{{ glusterfs_cluster_nodes|length }}"
+    state: present
+  become: true
+  delegate_to: "{{ glusterfs_primary }}"
+  loop: "{{ lookup('subelements', glusterfs_bricks, 'bricks', wantlist=True) }}"
+  when: (glusterfs_bricks is defined) and (glusterfs_bricks|length !=0)
