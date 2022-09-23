@@ -5,7 +5,6 @@
     section: PowerTools
     option: enabled
     value: "1"
-  become: true
   when:
     - ansible_distribution != "Fedora"
     - ansible_distribution_version is version('8', '>=')
@@ -14,11 +13,9 @@
   yum:
     name: centos-release-gluster
     state: present
-  become: true
   when: ansible_distribution != "Fedora"
 
 - name: redhat | Installing glusterfs-server
   package:
-    name: glusterfs-server
+    name: "glusterfs-server-{{ glusterfs_minor_version }}"
     state: present
-  become: true

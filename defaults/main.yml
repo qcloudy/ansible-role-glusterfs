@@ -1,5 +1,7 @@
 ---
-glusterfs_version: 7
+glusterfs_version: 10
+
+glusterfs_minor_version: 10.3
 
 # Defines Ansible group which contains GlusterFS servers
 glusterfs_server_group: glusterfs

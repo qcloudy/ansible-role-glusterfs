@@ -4,4 +4,3 @@
     name: glusterd
     state: started
     enabled: true
-  become: true
