@@ -16,10 +16,6 @@
   apt_repository:
     repo: "ppa:gluster/glusterfs-{{ glusterfs_version }}"
     state: present
-  environment:
-    http_proxy: "{{ http_proxy }}"
-    https_proxy: "{{ http_proxy }}"
-    no_proxy: "{{ no_proxy }}"
   when: ansible_distribution == "Ubuntu"
 
 - name: debian | Adding GlusterFS Repo Key
